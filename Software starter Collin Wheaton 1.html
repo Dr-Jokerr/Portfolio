@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collin Wheaton | Software Engineer</title>
+    <style>
+        :root {
+            --primary: #6e48aa;
+            --secondary: #9d50bb;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --accent: #41d8bf;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--light);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--accent);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 5%;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            margin-left: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+        
+        section {
+            padding: 5rem 5%;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 72, 170, 0.3);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(110, 72, 170, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .project-img {
+            height: 200px;
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-img canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .project-content {
+            padding: 1.5rem;
+        }
+        
+        .project-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-desc {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tag {
+            background: rgba(110, 72, 170, 0.2);
+            color: var(--accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .skill-item {
+            background: rgba(26, 26, 46, 0.7);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 72, 170, 0.3);
+        }
+        
+        .skill-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(110, 72, 170, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .skill-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(26, 26, 46, 0.7);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 72, 170, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(26, 26, 46, 0.7);
+            margin-top: 5rem;
+            position: relative;
+            z-index: 5;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(110, 72, 170, 0.3);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .social-link {
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .demo-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .demo-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .demo-content {
+            background: var(--dark);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            position: relative;
+            border: 1px solid var(--primary);
+        }
+        
+        .close-demo {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    
+    <header>
+        <a href="#" class="logo">CW</a>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <h1>Collin Wheaton</h1>
+        <p>Software Engineer with professional experience in full-stack development. Passionate about creating interactive web experiences with cutting-edge technologies.</p>
+        <div>
+            <a href="#projects" class="btn">View Projects</a>
+            <a href="#contact" class="btn btn-outline">Get in Touch</a>
+        </div>
+    </section>
+    
+    <section id="about">
+        <h2 class="section-title">About Me</h2>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <p style="margin-bottom: 2rem; line-height: 1.6;">
+                I'm a Software Engineering student at Kennesaw State University with 1.5 years of professional experience in software development. 
+                Skilled in coding, debugging, and collaborating in team-based environments. I love tackling complex problems and creating 
+                efficient, user-friendly solutions.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <div style="background: rgba(26, 26, 46, 0.7); padding: 1.5rem; border-radius: 10px; min-width: 200px; backdrop-filter: blur(10px); border: 1px solid rgba(110, 72, 170, 0.3);">
+                    <h3 style="color: var(--accent); margin-bottom: 0.5rem;">Education</h3>
+                    <p>Kennesaw State University</p>
+                    <p>B.S. Software Engineering</p>
+                    <p>2021 - Present</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.7); padding: 1.5rem; border-radius: 10px; min-width: 200px; backdrop-filter: blur(10px); border: 1px solid rgba(110, 72, 170, 0.3);">
+                    <h3 style="color: var(--accent); margin-bottom: 0.5rem;">Experience</h3>
+                    <p>Junior Software Developer</p>
+                    <p>Tech Solutions Inc.</p>
+                    <p>Aug 2024 - Present</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.7); padding: 1.5rem; border-radius: 10px; min-width: 200px; backdrop-filter: blur(10px); border: 1px solid rgba(110, 72, 170, 0.3);">
+                    <h3 style="color: var(--accent); margin-bottom: 0.5rem;">Certifications</h3>
+                    <p>Google IT Support</p>
+                    <p>AWS Cloud Practitioner</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="projects">
+        <h2 class="section-title">My Projects</h2>
+        <div class="projects-grid">
+            <!-- Solo Project 1 -->
+            <div class="project-card">
+                <div class="project-img">
+                    <canvas id="project1-canvas"></canvas>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">3D Portfolio Website</h3>
+                    <p class="project-desc">An interactive 3D portfolio website built with Three.js featuring particle animations and 3D models.</p>
+                    <div class="project-tags">
+                        <span class="tag">Three.js</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">WebGL</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="openDemo('project1')">Live Demo</a>
+                        <a href="#" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Code</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Project -->
+            <div class="project-card">
+                <div class="project-img">
+                    <canvas id="project2-canvas"></canvas>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Collaborative Code Editor</h3>
+                    <p class="project-desc">A real-time collaborative code editor built with React, Node.js, and WebSockets for team coding sessions.</p>
+                    <div class="project-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">WebSockets</span>
+                        <span class="tag">Team Project</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="openDemo('project2')">Live Demo</a>
+                        <a href="#" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Code</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Startup Project -->
+            <div class="project-card">
+                <div class="project-img">
+                    <canvas id="project3-canvas"></canvas>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">AI-Powered Task Manager</h3>
+                    <p class="project-desc">A startup project featuring an intelligent task manager with natural language processing and predictive scheduling.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Django</span>
+                        <span class="tag">NLP</span>
+                        <span class="tag">Startup</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="openDemo('project3')">Live Demo</a>
+                        <a href="#" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Code</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Freelance Project -->
+            <div class="project-card">
+                <div class="project-img">
+                    <canvas id="project4-canvas"></canvas>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">E-commerce Platform</h3>
+                    <p class="project-desc">A custom e-commerce solution for a client featuring 3D product visualization and AR preview capabilities.</p>
+                    <div class="project-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">Three.js</span>
+                        <span class="tag">Firebase</span>
+                        <span class="tag">Freelance</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="openDemo('project4')">Live Demo</a>
+                        <a href="#" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Code</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- From Resume -->
+            <div class="project-card">
+                <div class="project-img">
+                    <canvas id="project5-canvas"></canvas>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Task Manager App</h3>
+                    <p class="project-desc">A full-stack task manager application built with React and Firebase, featuring real-time updates and user authentication.</p>
+                    <div class="project-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">Firebase</span>
+                        <span class="tag">JavaScript</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="openDemo('project5')">Live Demo</a>
+                        <a href="#" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Code</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- From Resume -->
+            <div class="project-card">
+                <div class="project-img">
+                    <canvas id="project6-canvas"></canvas>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Python Automation</h3>
+                    <p class="project-desc">Collection of Python scripts automating repetitive tasks like data entry, file organization, and web scraping.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Automation</span>
+                        <span class="tag">Scripting</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="openDemo('project6')">Live Demo</a>
+                        <a href="#" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Code</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="skills">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="skills-container">
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fab fa-python"></i></div>
+                <h3>Python</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fab fa-java"></i></div>
+                <h3>Java</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fab fa-js"></i></div>
+                <h3>JavaScript</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fas fa-code"></i></div>
+                <h3>C++</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fab fa-react"></i></div>
+                <h3>React</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fab fa-node-js"></i></div>
+                <h3>Node.js</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fas fa-database"></i></div>
+                <h3>MySQL</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fas fa-database"></i></div>
+                <h3>MongoDB</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fab fa-git-alt"></i></div>
+                <h3>Git</h3>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon"><i class="fab fa-aws"></i></div>
+                <h3>AWS</h3>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-form">
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </section>
+    
+    <footer>
+        <div style="margin-bottom: 1rem;">
+            <p><i class="fas fa-envelope"></i> makhiphotos@gmail.com</p>
+            <p><i class="fas fa-phone"></i> (770) 846-1924</p>
+            <p><i class="fas fa-map-marker-alt"></i> Conyers, GA 30013</p>
+        </div>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/collin-wheaton-657627252/" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/yourusername" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p>&copy; 2024 Collin Wheaton. All rights reserved.</p>
+    </footer>
+    
+    <div class="demo-container" id="demoContainer">
+        <div class="demo-content">
+            <button class="close-demo" onclick="closeDemo()">&times;</button>
+            <iframe id="demoFrame" style="width: 800px; height: 600px; border: none; background: white;"></iframe>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script>
+        // Background Animation
+        const bgCanvas = document.getElementById('bgCanvas');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        
+        bgCanvas.width = width;
+        bgCanvas.height = height;
+        
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: bgCanvas,
+            alpha: true,
+            antialias: true
+        });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(width, height);
+        
+        // Create a galaxy of particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 2000;
+        
+        const posArray = new Float32Array(particleCount * 3);
+        const sizeArray = new Float32Array(particleCount);
+        const colorArray = new Float32Array(particleCount * 3);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+            if(i % 3 === 0) {
+                sizeArray[i/3] = Math.random() * 0.5 + 0.1;
+                
+                // Random colors with purple/blue bias
+                const r = Math.random() * 0.2 + 0.4; // 0.4-0.6
+                const g = Math.random() * 0.2 + 0.1; // 0.1-0.3
+                const b = Math.random() * 0.3 + 0.5; // 0.5-0.8
+                
+                colorArray[i] = r;
+                colorArray[i+1] = g;
+                colorArray[i+2] = b;
+            }
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizeArray, 1));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        // Add a glowing orb in the center
+        const orbGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const orbMaterial = new THREE.MeshBasicMaterial({
+            color: 0x9d50bb,
+            transparent: true,
+            opacity: 0.3,
+            blending: THREE.AdditiveBlending
+        });
+        const orb = new THREE.Mesh(orbGeometry, orbMaterial);
+        scene.add(orb);
+        
+        // Add pulsing rings around the orb
+        const ringGeometry = new THREE.TorusGeometry(0.8, 0.02, 16, 100);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+            color: 0x6e48aa,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending
+        });
+        const rings = [];
+        
+        for(let i = 0; i < 3; i++) {
+            const ring = new THREE.Mesh(ringGeometry, ringMaterial.clone());
+            ring.rotation.x = Math.PI / 2;
+            ring.scale.set(0.1, 0.1, 0.1);
+            scene.add(ring);
+            rings.push({
+                mesh: ring,
+                speed: 0.2 + Math.random() * 0.3,
+                scale: 0.8 + i * 0.4,
+                opacity: 0.3 + i * 0.2
+            });
+        }
+        
+        camera.position.z = 3;
+        
+        // Animation for project cards
+        const projectCanvases = [
+            'project1-canvas', 'project2-canvas', 'project3-canvas',
+            'project4-canvas', 'project5-canvas', 'project6-canvas'
+        ];
+        
+        const projectScenes = [];
+        const projectCameras = [];
+        const projectRenderers = [];
+        const projectObjects = [];
+        
+        projectCanvases.forEach((canvasId, index) => {
+            const canvas = document.getElementById(canvasId);
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true
+            });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            
+            // Different 3D objects for each project
+            let object;
+            switch(index) {
+                case 0: // 3D Portfolio
+                    const geometry1 = new THREE.IcosahedronGeometry(1, 0);
+                    const material1 = new THREE.MeshPhongMaterial({
+                        color: 0x6e48aa,
+                        emissive: 0x9d50bb,
+                        emissiveIntensity: 0.5,
+                        specular: 0xffffff,
+                        shininess: 30,
+                        wireframe: true
+                    });
+                    object = new THREE.Mesh(geometry1, material1);
+                    break;
+                case 1: // Collaborative Editor
+                    const geometry2 = new THREE.BoxGeometry(1, 1, 1);
+                    const edges = new THREE.EdgesGeometry(geometry2);
+                    const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x41d8bf }));
+                    const material2 = new THREE.MeshBasicMaterial({
+                        color: 0x1a1a2e,
+                        transparent: true,
+                        opacity: 0.7
+                    });
+                    object = new THREE.Group();
+                    object.add(new THREE.Mesh(geometry2, material2));
+                    object.add(line);
+                    break;
+                case 2: // AI Task Manager
+                    const geometry3 = new THREE.TorusKnotGeometry(0.7, 0.2, 100, 16);
+                    const material3 = new THREE.MeshStandardMaterial({
+                        color: 0x41d8bf,
+                        metalness: 0.7,
+                        roughness: 0.3
+                    });
+                    object = new THREE.Mesh(geometry3, material3);
+                    break;
+                case 3: // E-commerce
+                    const geometry4 = new THREE.SphereGeometry(0.8, 32, 32);
+                    const material4 = new THREE.MeshPhongMaterial({
+                        color: 0x9d50bb,
+                        specular: 0xffffff,
+                        shininess: 50,
+                        transparent: true,
+                        opacity: 0.8,
+                        wireframe: true
+                    });
+                    object = new THREE.Mesh(geometry4, material4);
+                    break;
+                case 4: // Task Manager
+                    const geometry5 = new THREE.ConeGeometry(0.8, 1.5, 4);
+                    const material5 = new THREE.MeshPhongMaterial({
+                        color: 0x6e48aa,
+                        emissive: 0x41d8bf,
+                        emissiveIntensity: 0.3,
+                        specular: 0xffffff,
+                        shininess: 50,
+                        side: THREE.DoubleSide,
+                        flatShading: true
+                    });
+                    object = new THREE.Mesh(geometry5, material5);
+                    break;
+                case 5: // Python Automation
+                    const geometry6 = new THREE.OctahedronGeometry(1, 0);
+                    const material6 = new THREE.MeshStandardMaterial({
+                        color: 0x41d8bf,
+                        metalness: 0.5,
+                        roughness: 0.5,
+                        transparent: true,
+                        opacity: 0.8
+                    });
+                    object = new THREE.Mesh(geometry6, material6);
+                    break;
+            }
+            
+            scene.add(object);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            const pointLight = new THREE.PointLight(0x9d50bb, 1, 10);
+            pointLight.position.set(2, 2, 2);
+            scene.add(pointLight);
+            
+            camera.position.z = 3;
+            
+            projectScenes.push(scene);
+            projectCameras.push(camera);
+            projectRenderers.push(renderer);
+            projectObjects.push(object);
+        });
+        
+        // Mouse move animation for background
+        document.addEventListener('mousemove', (event) => {
+            const mouseX = (event.clientX / width) * 2 - 1;
+            const mouseY = -(event.clientY / height) * 2 + 1;
+            
+            camera.position.x = mouseX * 0.5;
+            camera.position.y = mouseY * 0.5;
+            camera.lookAt(0, 0, 0);
+        });
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Background animation
+            particlesMesh.rotation.x += 0.0005;
+            particlesMesh.rotation.y += 0.0005;
+            
+            // Animate the orb
+            orb.scale.x = 0.5 + Math.sin(Date.now() * 0.001) * 0.1;
+            orb.scale.y = 0.5 + Math.sin(Date.now() * 0.001) * 0.1;
+            orb.scale.z = 0.5 + Math.sin(Date.now() * 0.001) * 0.1;
+            
+            // Animate the rings
+            rings.forEach((ring, i) => {
+                ring.mesh.rotation.y += 0.01;
+                ring.mesh.scale.set(
+                    ring.scale + Math.sin(Date.now() * 0.001 * ring.speed) * 0.2,
+                    ring.scale + Math.sin(Date.now() * 0.001 * ring.speed) * 0.2,
+                    ring.scale + Math.sin(Date.now() * 0.001 * ring.speed) * 0.2
+                );
+                ring.mesh.material.opacity = ring.opacity + Math.sin(Date.now() * 0.001 * ring.speed) * 0.1;
+            });
+            
+            renderer.render(scene, camera);
+            
+            // Project card animations
+            projectObjects.forEach((object, i) => {
+                object.rotation.x += 0.01;
+                object.rotation.y += 0.01;
+                
+                // Different animations for different projects
+                switch(i) {
+                    case 0: // Icosahedron
+                        object.rotation.z += 0.005;
+                        break;
+                    case 1: // Cube
+                        if(object instanceof THREE.Group) {
+                            object.children[0].rotation.x += 0.01;
+                            object.children[0].rotation.y += 0.01;
+                        }
+                        break;
+                    case 2: // Torus Knot
+                        object.rotation.x += 0.02;
+                        break;
+                    case 3: // Sphere
+                        object.scale.x = 0.8 + Math.sin(Date.now() * 0.001) * 0.2;
+                        object.scale.y = 0.8 + Math.sin(Date.now() * 0.001) * 0.2;
+                        object.scale.z = 0.8 + Math.sin(Date.now() * 0.001) * 0.2;
+                        break;
+                    case 4: // Cone
+                        object.rotation.z += 0.01;
+                        break;
+                    case 5: // Octahedron
+                        object.rotation.x += 0.015;
+                        object.rotation.y += 0.015;
+                        break;
+                }
+                
+                projectRenderers[i].render(projectScenes[i], projectCameras[i]);
+            });
+        }
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+            
+            projectCameras.forEach((cam, i) => {
+                const canvas = document.getElementById(projectCanvases[i]);
+                cam.aspect = canvas.clientWidth / canvas.clientHeight;
+                cam.updateProjectionMatrix();
+                projectRenderers[i].setSize(canvas.clientWidth, canvas.clientHeight);
+            });
+        });
+        
+        // Contact form handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // In a real implementation, you would send this data to a server
+            // For this example, we'll just log it and show an alert
+            console.log('Form submitted:', { name, email, subject, message });
+            
+            // Create mailto link as fallback
+            const mailtoLink = `mailto:makhiphotos@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+            window.location.href = mailtoLink;
+            
+            // Show success message
+            alert('Thank you for your message! I will get back to you soon.');
+            this.reset();
+        });
+        
+        // Demo viewer functionality
+        function openDemo(projectId) {
+            const demoContainer = document.getElementById('demoContainer');
+            const demoFrame = document.getElementById('demoFrame');
+            
+            // In a real implementation, you would set the iframe src to your project URL
+            // For this example, we'll just show a placeholder
+            demoFrame.srcdoc = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${projectId} Demo</title>
+                    <style>
+                        body { 
+                            display: flex; 
+                            justify-content: center; 
+                            align-items: center; 
+                            height: 100vh; 
+                            margin: 0; 
+                            background: #1a1a2e; 
+                            color: white; 
+                            font-family: Arial, sans-serif;
+                        }
+                        .demo-content {
+                            text-align: center;
+                            padding: 2rem;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="demo-content">
+                        <h1>${projectId.replace('-', ' ').toUpperCase()} Demo</h1>
+                        <p>This would be a live demo of the project in a real implementation.</p>
+                        <p>For now, this is a placeholder to demonstrate the functionality.</p>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            demoContainer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeDemo() {
+            const demoContainer = document.getElementById('demoContainer');
+            demoContainer.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
